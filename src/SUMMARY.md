@@ -15,3 +15,5 @@
   - [Averaging Two Numbers: Now with Functions!](./6.3_averaging_with_functions.md)
 - [C: Assembly for Humans](./7_c.md)
   - [Re-Implementing the Averaging Function](./7.1_reimplementing_averaging.md)
+- [Hello, World!](./8_hello_world.md)
+  - [Introduction to System Calls](./8.1_sys_calls.md)
