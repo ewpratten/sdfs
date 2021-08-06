@@ -85,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two numbers</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two Numbers</a></li></ol></li><li class="chapter-item expanded "><a href="6_stack_and_heap.html"><strong aria-hidden="true">6.</strong> The Stack and Heap</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="6.1_brief_intro_to_functions.html"><strong aria-hidden="true">6.1.</strong> Brief Introduction to Functions</a></li><li class="chapter-item expanded "><a href="6.2_calling_conventions.html"><strong aria-hidden="true">6.2.</strong> Calling Conventions</a></li><li class="chapter-item expanded "><a href="6.3_averaging_with_functions.html"><strong aria-hidden="true">6.3.</strong> Averaging Two Numbers: Now with Functions!</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -240,8 +240,8 @@ main:
 <tr><td><code>RBX</code></td><td>General purpose</td></tr>
 <tr><td><code>RCX</code></td><td>General purpose</td></tr>
 <tr><td><code>RDX</code></td><td>General purpose</td></tr>
-<tr><td><code>RSP</code></td><td><a href="">Stack</a> pointer</td></tr>
-<tr><td><code>RBP</code></td><td>Base pointer</td></tr>
+<tr><td><code>RSP</code></td><td><a href="/6_stack_and_heap.html">Stack</a> pointer</td></tr>
+<tr><td><code>RBP</code></td><td>Stack base pointer</td></tr>
 <tr><td><code>RSI</code></td><td>General purpose</td></tr>
 <tr><td><code>RDI</code></td><td>General purpose</td></tr>
 <tr><td><code>R8</code> to <code>R15</code></td><td>General purpose</td></tr>
@@ -270,7 +270,7 @@ main:
 <pre><code>48 8b 04 25 01 00 00 00 48 03 04 25 03 00 00 00
 </code></pre>
 <p>As you can see, this is starting to get very unreasonable to understand. Good thing we switched to assembly, isn't it? 😉</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="more-math-averaging-two-numbers"><a class="header" href="#more-math-averaging-two-numbers">More Math: Averaging Two numbers</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="more-math-averaging-two-numbers"><a class="header" href="#more-math-averaging-two-numbers">More Math: Averaging Two Numbers</a></h1>
 <p>Using our new-found ability to store things in registers, and perform operations on them, let's write a program that finds the average between the following sets of numbers:</p>
 <ul>
 <li><code>1</code> and <code>7</code></li>
@@ -318,6 +318,64 @@ sarl %rax
     add %rdx, %rax
     sar %rax
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-stack-and-heap"><a class="header" href="#the-stack-and-heap">The Stack and Heap</a></h1>
+<p>You may have noticed that things like memory locations, and which registers are used feel rather arbitrary. That's because, up until this point, they have been whatever I feel like using.</p>
+<p>In the real world, well-designed conventions exist to ensure everyone's code follows the same set of rules, and uses memory in the same way. This is what lets different pieces of code from different people work together.</p>
+<p>The first important piece in the way we manage memory is knowledge of the stack and heap.</p>
+<p>Both the stack and heap are separate segments of the same memory in your computer. They start at opposite ends of memory, and grow towards the center. For example, if you had 256 bytes of RAM total, you might find that bytes 0-128 are allocated for the stack, and bytes 128-256 are the heap. It is very possible for these to overlap with eachother, and that is a big problem.</p>
+<h2 id="the-stack"><a class="header" href="#the-stack">The Stack</a></h2>
+<p>The stack is a First-In-First-Out (FIFO) data structure. Its starting location in memory is constant, and in assembly, the start address can be found in the <code>RBP</code> register.</p>
+<p>The stack is modified via <code>push</code> and <code>pop</code> instructions, where <code>push</code> will increase the size of the stack by one byte, then put the specified value in that new spot. <code>pop</code> will give you the top value from the stack, then shrink the stack by one byte.</p>
+<p>To see where the &quot;top&quot; of the stack currently sits in memory, you can access the <code>RSP</code> register.</p>
+<h2 id="the-heap"><a class="header" href="#the-heap">The Heap</a></h2>
+<p>The heap can be thought of as &quot;some memory that exists for when you need it&quot;. How it is managed is different for every programming language and OS. Generally, you as a programmer ask the Operating System to give you some part of the heap to use, then you return it when you are done with it.</p>
+<p><em>What</em> you use your portion of heap for is completely up to you, and it can be any size.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="brief-introduction-to-functions"><a class="header" href="#brief-introduction-to-functions">Brief Introduction to Functions</a></h1>
+<p>In order to understand how a function works, you will need to read the next section, but in order for the next section to make sense, you need to know what a function is.</p>
+<p>Functions are essentially snippets of code that can be called from any part of a program. They are an easy way to avoid repetition in your code.</p>
+<p>When you call a function in your code, the CPU will jump to the start of that function's machine code, and start executing it. Then, at the end of the function, the CPU will jump back to the point where the function was called from.</p>
+<p>Values passed to the function are called <em>parameters</em>, and the value (there can only be one) that the function returns is called the <em>return value</em>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="calling-conventions"><a class="header" href="#calling-conventions">Calling Conventions</a></h1>
+<p>Now that you know what a function is, you may be able to immediately see possible uses for them. One issue you will quickly encounter when trying to use functions is, <em>&quot;How do I pass data to and from a function?&quot;</em>.</p>
+<p>The simple answer would be to come up with a little rule for your code. For example, you could say, <em>&quot;Any time I want a function to accept a byte, I can have it read from address &lt;whatever&gt;, and I'll be sure to just put my value there before calling the function&quot;</em>.</p>
+<p>And just like that, you invented what is called a <em>Calling Convention</em>! Of course, there will need to be more rules around this system, since you might eventually need to write a function that accepts two bytes, or a function that needs to return a byte.</p>
+<p>A new issue may arise when you try calling code written by someone else, since they might have come up with a similar system that is not exactly the same as yours.</p>
+<p>Once again, the people who come up with these ideas are pretty smart, and they have come up with a common rule called the <a href="https://en.wikipedia.org/wiki/X86_calling_conventions#cdecl"><em>cdecl</em></a>, that is used almost everywhere.</p>
+<h2 id="the-c-calling-convention"><a class="header" href="#the-c-calling-convention">The C Calling Convention</a></h2>
+<p><code>cdecl</code>, or <em>The C Calling Convention</em> is defined as follows. (This section is adapted from <a href="https://aaronbloomfield.github.io/pdr/book/x86-32bit-ccc-chapter.pdf">this document</a>)</p>
+<p>This may seem like a lot of work (it is), but it is necessary in order to ensure all functions can inter-operate smoothly.</p>
+<h3 id="the-callers-rules"><a class="header" href="#the-callers-rules">The Caller's Rules</a></h3>
+<ol>
+<li>Before calling a function, the caller should save the contents of <code>RAX</code>, <code>RCX</code>, and <code>RDX</code> by pushing them onto the stack</li>
+<li>To pass parameters to a function, the caller should push them onto the stack in reverse order (last argument pushed first)</li>
+<li>Call the function</li>
+<li>After the function returns, the caller must remove the arguments from the stack</li>
+<li>The return value of the function can be found in <code>RAX</code></li>
+<li>The caller can then restore the contents of <code>RAX</code>, <code>RCX</code>, and <code>RDX</code> by popping them from the stack</li>
+</ol>
+<h3 id="the-callees-rules"><a class="header" href="#the-callees-rules">The Callee's Rules</a></h3>
+<ol>
+<li>The called function should push <code>push</code> the <code>RBP</code> register onto the stack, then copy <code>RSP</code> to <code>RBP</code>
+<ul>
+<li>This effectively creates a new temporary stack for the function, in reality, this new stack just sits at the top of the real stack</li>
+<li>This is achived by executing:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-x86asm">push %rbp
+mov %rsp, %rbp
+</code></pre>
+<ol start="2">
+<li>Make space on the stack if needed</li>
+<li>The function must save the contents of <code>RBX</code>, <code>RDI</code>, and <code>RSI</code> by pushing them onto the stack</li>
+<li>When finished, place the result of the function in <code>RAX</code></li>
+<li>Restore the contents of <code>RBX</code>, <code>RDI</code>, and <code>RSI</code> by popping them from the stack</li>
+<li>Pop of any variables made in step 2</li>
+<li>Pop the saved <code>RBP</code> value from the stack back in to <code>RBP</code></li>
+<li>Execute a <code>ret</code> instruction</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="averaging-two-numbers-now-with-functions"><a class="header" href="#averaging-two-numbers-now-with-functions">Averaging Two Numbers: Now with Functions!</a></h1>
+<p>Alright. Let's revisit the <a href="/5.3_averaging.html"><em>Averaging Two numbers</em></a> example from before.</p>
 
                     </main>
 

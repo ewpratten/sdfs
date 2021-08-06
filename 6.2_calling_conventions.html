@@ -3,9 +3,8 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title></title>
-                        <base href="/">
-        
+        <title>Calling Conventions - Software Development From Scratch</title>
+                
 
         <!-- Custom HTML head -->
         
@@ -85,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two Numbers</a></li></ol></li><li class="chapter-item expanded "><a href="6_stack_and_heap.html"><strong aria-hidden="true">6.</strong> The Stack and Heap</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="6.1_brief_intro_to_functions.html"><strong aria-hidden="true">6.1.</strong> Brief Introduction to Functions</a></li><li class="chapter-item expanded "><a href="6.2_calling_conventions.html"><strong aria-hidden="true">6.2.</strong> Calling Conventions</a></li><li class="chapter-item expanded "><a href="6.3_averaging_with_functions.html"><strong aria-hidden="true">6.3.</strong> Averaging Two Numbers: Now with Functions!</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two Numbers</a></li></ol></li><li class="chapter-item expanded "><a href="6_stack_and_heap.html"><strong aria-hidden="true">6.</strong> The Stack and Heap</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="6.1_brief_intro_to_functions.html"><strong aria-hidden="true">6.1.</strong> Brief Introduction to Functions</a></li><li class="chapter-item expanded "><a href="6.2_calling_conventions.html" class="active"><strong aria-hidden="true">6.2.</strong> Calling Conventions</a></li><li class="chapter-item expanded "><a href="6.3_averaging_with_functions.html"><strong aria-hidden="true">6.3.</strong> Averaging Two Numbers: Now with Functions!</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -149,14 +148,57 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="calling-conventions"><a class="header" href="#calling-conventions">Calling Conventions</a></h1>
+<p>Now that you know what a function is, you may be able to immediately see possible uses for them. One issue you will quickly encounter when trying to use functions is, <em>&quot;How do I pass data to and from a function?&quot;</em>.</p>
+<p>The simple answer would be to come up with a little rule for your code. For example, you could say, <em>&quot;Any time I want a function to accept a byte, I can have it read from address &lt;whatever&gt;, and I'll be sure to just put my value there before calling the function&quot;</em>.</p>
+<p>And just like that, you invented what is called a <em>Calling Convention</em>! Of course, there will need to be more rules around this system, since you might eventually need to write a function that accepts two bytes, or a function that needs to return a byte.</p>
+<p>A new issue may arise when you try calling code written by someone else, since they might have come up with a similar system that is not exactly the same as yours.</p>
+<p>Once again, the people who come up with these ideas are pretty smart, and they have come up with a common rule called the <a href="https://en.wikipedia.org/wiki/X86_calling_conventions#cdecl"><em>cdecl</em></a>, that is used almost everywhere.</p>
+<h2 id="the-c-calling-convention"><a class="header" href="#the-c-calling-convention">The C Calling Convention</a></h2>
+<p><code>cdecl</code>, or <em>The C Calling Convention</em> is defined as follows. (This section is adapted from <a href="https://aaronbloomfield.github.io/pdr/book/x86-32bit-ccc-chapter.pdf">this document</a>)</p>
+<p>This may seem like a lot of work (it is), but it is necessary in order to ensure all functions can inter-operate smoothly.</p>
+<h3 id="the-callers-rules"><a class="header" href="#the-callers-rules">The Caller's Rules</a></h3>
+<ol>
+<li>Before calling a function, the caller should save the contents of <code>RAX</code>, <code>RCX</code>, and <code>RDX</code> by pushing them onto the stack</li>
+<li>To pass parameters to a function, the caller should push them onto the stack in reverse order (last argument pushed first)</li>
+<li>Call the function</li>
+<li>After the function returns, the caller must remove the arguments from the stack</li>
+<li>The return value of the function can be found in <code>RAX</code></li>
+<li>The caller can then restore the contents of <code>RAX</code>, <code>RCX</code>, and <code>RDX</code> by popping them from the stack</li>
+</ol>
+<h3 id="the-callees-rules"><a class="header" href="#the-callees-rules">The Callee's Rules</a></h3>
+<ol>
+<li>The called function should push <code>push</code> the <code>RBP</code> register onto the stack, then copy <code>RSP</code> to <code>RBP</code>
+<ul>
+<li>This effectively creates a new temporary stack for the function, in reality, this new stack just sits at the top of the real stack</li>
+<li>This is achived by executing:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-x86asm">push %rbp
+mov %rsp, %rbp
+</code></pre>
+<ol start="2">
+<li>Make space on the stack if needed</li>
+<li>The function must save the contents of <code>RBX</code>, <code>RDI</code>, and <code>RSI</code> by pushing them onto the stack</li>
+<li>When finished, place the result of the function in <code>RAX</code></li>
+<li>Restore the contents of <code>RBX</code>, <code>RDI</code>, and <code>RSI</code> by popping them from the stack</li>
+<li>Pop of any variables made in step 2</li>
+<li>Pop the saved <code>RBP</code> value from the stack back in to <code>RBP</code></li>
+<li>Execute a <code>ret</code> instruction</li>
+</ol>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="6.1_brief_intro_to_functions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
                         
+                                                    <a rel="next" href="6.3_averaging_with_functions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
                         <div style="clear: both"></div>
                     </nav>
@@ -164,7 +206,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="6.1_brief_intro_to_functions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
                 
+                                    <a rel="next" href="6.3_averaging_with_functions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                             </nav>
 
         </div>
