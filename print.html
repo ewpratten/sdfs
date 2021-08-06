@@ -283,11 +283,11 @@ main:
 \frac{A + B}{2}
 \]</p>
 <p>Since we are going to perform the same action multiple times, I'll write the logic once in a snippet below, then we can re-use it in the main program. The snippet below will take \(A\) and \(B\) as the values in registers <code>RAX</code> and <code>RDX</code>, respectively, then store the result in <code>RAX</code>.</p>
-<pre><code class="language-x86asm">addl %rdx, %rax
-movl %rax, %rdx
-shrl $32, %rdx
-addl %rdx, %rax
-sarl %rax
+<pre><code class="language-x86asm">add %rdx, %rax
+mov %rax, %rdx
+shr $32, %rdx
+add %rdx, %rax
+sar %rax
 </code></pre>
 <p>Why this doesn't use a <code>div</code> instruction when dividing? I'm not quite sure. My understanding is that byte manipulation with <code>shrl</code> and <code>sarl</code> is simply faster to execute than <code>div</code>.</p>
 <p>Anyways, back to the main goal. We now have a snipped of assembly code that can average the contents of <code>RAX</code> and <code>RDX</code>. To compute the averages of the numbers above, we just need to run it a few times for each set of numbers. Here is the full code:</p>
@@ -376,7 +376,46 @@ mov %rsp, %rbp
 <li>Execute a <code>ret</code> instruction</li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="averaging-two-numbers-now-with-functions"><a class="header" href="#averaging-two-numbers-now-with-functions">Averaging Two Numbers: Now with Functions!</a></h1>
-<p>Alright. Let's revisit the <a href="/5.3_averaging.html"><em>Averaging Two numbers</em></a> example from before.</p>
+<p>Alright. Let's revisit the <a href="/5.3_averaging.html"><em>Averaging Two numbers</em></a> example from before. This time, instead of copy/paste-ing the average snipped, we can make it a function.</p>
+<p>Following the <a href=""><em>Calling Convention</em></a>, we can move our <code>average</code> snippet into its own function:</p>
+<pre><code class="language-x86asm">average:
+    push %rbp 
+    mov %rsp, %rbp 
+    sub  $4, %rsp 
+    push %rdi 
+    push %rsi
+
+    pop %rdx
+    pop %rax
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+
+    pop %rsi
+    pop %rdi
+    mov %rbp, %rsp
+    pop %rbp
+    ret
+</code></pre>
+<p>You'll notice it got bigger, but the same core code is still there. That's because we now have to follow the &quot;Callee's Rules&quot; set out by the calling convention. No end functionality has changed.</p>
+<p>The <code>main</code> section now looks a lot smaller, as it only has to push arguments to the stack and call the <code>average</code> function:</p>
+<pre><code class="language-x86asm">main:
+    push $7
+    push $1
+    call average
+
+    push $10
+    push $2
+    call average
+
+    push $31
+    push $5
+    call average
+</code></pre>
+<p>The result will still be stored in the <code>RAX</code> register after every function call (yes I planned that out on purpose earlier).</p>
 
                     </main>
 
