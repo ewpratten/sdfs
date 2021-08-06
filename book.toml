@@ -6,5 +6,6 @@ src = "src"
 title = "Software Development From Scratch"
 
 [output.html]
+mathjax-support = true
 theme = "light"
 default-theme = "light"
