@@ -9,3 +9,11 @@ title = "Software Development From Scratch"
 mathjax-support = true
 theme = "light"
 default-theme = "light"
+git-repository-url = "https://github.com/ewpratten/sdfs"
+cname = "sdfs.retrylife.ca"
+
+[output.html.search]
+enable = true
+
+[output.html.print]
+enable = true

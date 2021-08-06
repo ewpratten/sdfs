@@ -10,7 +10,7 @@ We also gain the ability to *label* things, so instead of remembering which of t
 
 Our program from the previous section, rewritten in Intel Assembly now looks like this:
 
-```asm
+```x86asm
 loop:
     jmp main
 main:

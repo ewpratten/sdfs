@@ -20,9 +20,6 @@ jobs:
       - name: Build book
         run: mdbook build
 
-      - name: Preserve CNAME
-        run: cp ./CNAME ./book/CNAME
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/master' }}
