@@ -230,6 +230,7 @@ main:
     jmp loop
 </code></pre>
 <p><code>loop</code> and <code>main</code> are labels, and the <code>jmp</code> instructions should be pretty self-explanatory at this point.</p>
+<p>It is important to note that, all of the assembly code to follow in this book <em>is valid</em>, but will not run without some special tools, since I am completely ignoring platform-specific details in the code. The assembly is just to give an easy way for me to show you how programs are working at this low level.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="registers-a-special-type-of-memory"><a class="header" href="#registers-a-special-type-of-memory">Registers: A Special Type of Memory</a></h1>
 <p>Back in the <a href="/3_memory.html"><em>Computer Memory</em></a> page, I said I wasn't going to explain how memory is broken up. This page is the first of a few where I'll explain it anyways.</p>
 <p><code>x86_64</code> cpus have a very small handful of very special memory locations called registers. These are physically <em>inside</em> the CPU, making them extremely fast to interact with. Due to this, they are being used all the time, and pretty important to understand.</p>
@@ -395,6 +396,22 @@ mov %rsp, %rbp
         </div>
 
         
+                <!-- Google Analytics Tag -->
+        <script type="text/javascript">
+            var localAddrs = ["localhost", "127.0.0.1", ""];
+
+            // make sure we don't activate google analytics if the developer is
+            // inspecting the book locally...
+            if (localAddrs.indexOf(document.location.hostname) === -1) {
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'G-65WL7TRZJ6', 'auto');
+                ga('send', 'pageview');
+            }
+        </script>
         
         
                 <script type="text/javascript">
