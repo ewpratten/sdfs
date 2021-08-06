@@ -18,3 +18,5 @@ main:
 ```
 
 `loop` and `main` are labels, and the `jmp` instructions should be pretty self-explanatory at this point.
+
+It is important to note that, all of the assembly code to follow in this book *is valid*, but will not run without some special tools, since I am completely ignoring platform-specific details in the code. The assembly is just to give an easy way for me to show you how programs are working at this low level.
