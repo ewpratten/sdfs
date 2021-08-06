@@ -119,7 +119,10 @@
                                                 <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        
+                                                                        <a href="https://github.com/ewpratten/sdfs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
                     </div>
                 </div>
 
@@ -148,7 +151,7 @@
                         <h1 id="using-a-register-creating-an-adder"><a class="header" href="#using-a-register-creating-an-adder">Using a Register: Creating an Adder</a></h1>
 <p>Real quickly, to show how you might use a register in your code, we'll create our second program.</p>
 <p>This program will store the number <code>1</code> in the register <code>RAX</code>, then add <code>3</code> to it, and store that result in <code>RAX</code> again.</p>
-<pre><code class="language-asm">main:
+<pre><code class="language-x86asm">main:
     movl $1, %rax
     addl $3, %rax
 </code></pre>

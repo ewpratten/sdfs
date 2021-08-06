@@ -120,7 +120,10 @@
                                                 <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        
+                                                                        <a href="https://github.com/ewpratten/sdfs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
                     </div>
                 </div>
 
@@ -221,7 +224,7 @@
 <p>These mnemonics would give out <em>SHORT Jump</em> instruction (<code>0xEB</code>) a nicer name: <code>jmp</code>.</p>
 <p>We also gain the ability to <em>label</em> things, so instead of remembering which of those extra bytes jumps where, we let the computer figure that out for us.</p>
 <p>Our program from the previous section, rewritten in Intel Assembly now looks like this:</p>
-<pre><code class="language-asm">loop:
+<pre><code class="language-x86asm">loop:
     jmp main
 main:
     jmp loop
@@ -259,7 +262,7 @@ main:
 <div style="break-before: page; page-break-before: always;"></div><h1 id="using-a-register-creating-an-adder"><a class="header" href="#using-a-register-creating-an-adder">Using a Register: Creating an Adder</a></h1>
 <p>Real quickly, to show how you might use a register in your code, we'll create our second program.</p>
 <p>This program will store the number <code>1</code> in the register <code>RAX</code>, then add <code>3</code> to it, and store that result in <code>RAX</code> again.</p>
-<pre><code class="language-asm">main:
+<pre><code class="language-x86asm">main:
     movl $1, %rax
     addl $3, %rax
 </code></pre>
@@ -279,7 +282,7 @@ main:
 \frac{A + B}{2}
 \]</p>
 <p>Since we are going to perform the same action multiple times, I'll write the logic once in a snippet below, then we can re-use it in the main program. The snippet below will take \(A\) and \(B\) as the values in registers <code>RAX</code> and <code>RDX</code>, respectively, then store the result in <code>RAX</code>.</p>
-<pre><code class="language-asm">addl %rdx, %rax
+<pre><code class="language-x86asm">addl %rdx, %rax
 movl %rax, %rdx
 shrl $32, %rdx
 addl %rdx, %rax
@@ -287,8 +290,7 @@ sarl %rax
 </code></pre>
 <p>Why this doesn't use a <code>div</code> instruction when dividing? I'm not quite sure. My understanding is that byte manipulation with <code>shrl</code> and <code>sarl</code> is simply faster to execute than <code>div</code>.</p>
 <p>Anyways, back to the main goal. We now have a snipped of assembly code that can average the contents of <code>RAX</code> and <code>RDX</code>. To compute the averages of the numbers above, we just need to run it a few times for each set of numbers. Here is the full code:</p>
-<pre><code class="language-asm">main:
-# 1 &amp; 7
+<pre><code class="language-x86asm">main:
     mov 1, %rax
     mov 7, %rdx
 
@@ -298,7 +300,6 @@ sarl %rax
     add %rdx, %rax
     sar %rax
 
-# 2 &amp; 10
     mov 2, %rax
     mov 10, %rdx
 
@@ -308,7 +309,6 @@ sarl %rax
     add %rdx, %rax
     sar %rax
 
-# 5 &amp; 31
     mov 5, %rax
     mov 31, %rdx
 

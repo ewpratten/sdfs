@@ -119,7 +119,10 @@
                                                 <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        
+                                                                        <a href="https://github.com/ewpratten/sdfs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
                     </div>
                 </div>
 
@@ -157,7 +160,7 @@
 \frac{A + B}{2}
 \]</p>
 <p>Since we are going to perform the same action multiple times, I'll write the logic once in a snippet below, then we can re-use it in the main program. The snippet below will take \(A\) and \(B\) as the values in registers <code>RAX</code> and <code>RDX</code>, respectively, then store the result in <code>RAX</code>.</p>
-<pre><code class="language-asm">addl %rdx, %rax
+<pre><code class="language-x86asm">addl %rdx, %rax
 movl %rax, %rdx
 shrl $32, %rdx
 addl %rdx, %rax
@@ -165,8 +168,7 @@ sarl %rax
 </code></pre>
 <p>Why this doesn't use a <code>div</code> instruction when dividing? I'm not quite sure. My understanding is that byte manipulation with <code>shrl</code> and <code>sarl</code> is simply faster to execute than <code>div</code>.</p>
 <p>Anyways, back to the main goal. We now have a snipped of assembly code that can average the contents of <code>RAX</code> and <code>RDX</code>. To compute the averages of the numbers above, we just need to run it a few times for each set of numbers. Here is the full code:</p>
-<pre><code class="language-asm">main:
-# 1 &amp; 7
+<pre><code class="language-x86asm">main:
     mov 1, %rax
     mov 7, %rdx
 
@@ -176,7 +178,6 @@ sarl %rax
     add %rdx, %rax
     sar %rax
 
-# 2 &amp; 10
     mov 2, %rax
     mov 10, %rdx
 
@@ -186,7 +187,6 @@ sarl %rax
     add %rdx, %rax
     sar %rax
 
-# 5 &amp; 31
     mov 5, %rax
     mov 31, %rdx
 
