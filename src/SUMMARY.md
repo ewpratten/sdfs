@@ -2,3 +2,5 @@
 
 - [Introduction](./1_introduction.md)
 - [Prerequisites](./2_prerequisites.md)
+- [Computer Memory](./3_memory.md)
+  - [Hex and Binary](./3.1_hex_and_binary.md)

@@ -8,6 +8,8 @@ If your computer is running on a different architecture, say ARM for example, th
 
 As for Windows users, feel free to install [Ubuntu WSL](https://wiki.ubuntu.com/WSL) and follow along from inside your WSL terminal.
 
+I also make the assumption that you are comfortable with some basic computer-related terms (CPU, RAM, etc), and know how to use your computer's command line.
+
 ## Installing the needed software
 
 To follow along, you will need to install a few things on your computer. In order to provide multiple examples, I use a few different languages in this book. The things marked with a **bold** star below are the important ones to install, the others are only necessary if you intend to follow *every single* example.
