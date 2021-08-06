@@ -13,3 +13,5 @@
   - [Brief Introduction to Functions](./6.1_brief_intro_to_functions.md)
   - [Calling Conventions](./6.2_calling_conventions.md)
   - [Averaging Two Numbers: Now with Functions!](./6.3_averaging_with_functions.md)
+- [C: Assembly for Humans](./7_c.md)
+  - [Re-Implementing the Averaging Function](./7.1_reimplementing_averaging.md)
