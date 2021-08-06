@@ -13,8 +13,7 @@
 - The Stack & Heap
   - Sidenote: Functions
   - Calling convention
-  - Functions
-    - Averaging two numbers, but with functions
+  - Averaging two numbers, but with functions
 - C: Assembly for Humans
   - Re-Implementing the Averaging function
 - Hello, World!
@@ -22,6 +21,7 @@
   - Hello World in ASM
   - Standard Libraries
   - Hello World in C
+- Data Types
 - Interpreted Languages
   - Hello World in Python
   - Hello World in Java
