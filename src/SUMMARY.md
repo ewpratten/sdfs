@@ -7,3 +7,4 @@
 - [Machine Code](./4_machine_code.md)
 - [Assembly: Machine Code for Humans](./5_assembly.md)
   - [Registers: A Special Type of Memory](./5.1_registers.md)
+  - [Using a Register: Creating an Adder](./5.2_adder.md)

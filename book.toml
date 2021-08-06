@@ -6,4 +6,5 @@ src = "src"
 title = "Software Development From Scratch"
 
 [output.html]
+theme = "light"
 default-theme = "light"
