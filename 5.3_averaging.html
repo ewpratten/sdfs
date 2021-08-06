@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Machine Code - Software Development From Scratch</title>
+        <title>More Math: Averaging Two numbers - Software Development From Scratch</title>
                 
 
         <!-- Custom HTML head -->
@@ -84,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html" class="active"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two numbers</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html" class="active"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two numbers</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -145,46 +145,66 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="machine-code"><a class="header" href="#machine-code">Machine Code</a></h1>
-<p>When a computer is powered on, it loads some information into memory, then passes the first byte from memory into the CPU. Each of these bytes has a special meaning to the CPU, telling it what to do next. We call these <em>Instructions</em>, because they instruct the CPU what to do.</p>
-<p><em>Quick sidenote: The CPU doesn't actually read the <strong>first</strong> byte. The byte number depends on the specific CPU, but that doesn't matter for this section.</em></p>
-<p>While I am about to introduce you to programming your computer by writing the bytes to memory manually, you will never do or see this again.</p>
-<h2 id="your-first-program-jump-loop"><a class="header" href="#your-first-program-jump-loop">Your First Program: Jump Loop</a></h2>
-<p>One of the simplest programs I can think of is one that never ends. We will:</p>
-<ol>
-<li>Have the CPU read the first byte in memory
+                        <h1 id="more-math-averaging-two-numbers"><a class="header" href="#more-math-averaging-two-numbers">More Math: Averaging Two numbers</a></h1>
+<p>Using our new-found ability to store things in registers, and perform operations on them, let's write a program that finds the average between the following sets of numbers:</p>
 <ul>
-<li>This byte contains an instruction telling the CPU to read the third byte in memory</li>
+<li><code>1</code> and <code>7</code></li>
+<li><code>2</code> and <code>10</code></li>
+<li><code>5</code> and <code>31</code></li>
 </ul>
-</li>
-<li>At the third byte, we will put an instruction telling the CPU to go back to the first byte</li>
-</ol>
-<p>This will cause an infinite loop of <em>jumping</em> back anf fourth between the first and third bytes.</p>
-<p>Since we are working with the <code>x86_64</code> architecture, we will use what is called <em>X86 Machine Code</em> to write this program. Each architecture has a different mapping between which bytes do what when passed to the CPU.</p>
-<p>The following instruction is all we need for this program</p>
-<table><thead><tr><th>Instruction</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>0xEB</code></td><td>SHORT Jump</td></tr>
-</tbody></table>
-<p>A <em>SHORT Jump</em> is what we call it when the CPU needs to move to another instruction that is nearby in memory (within a couple hundred locations, not thousands).</p>
-<p>Using just this instruction, we can write out first program right now (although actually running it is impractical, so we won't do that). The bytes in memory, in order are:</p>
-<pre><code>0xEB
-0x00
-0xEB
-0xFC
+<p>As you should already know, to find the average between numbers \(A\) and \(B\), we compute:</p>
+<p>\[
+\frac{A + B}{2}
+\]</p>
+<p>Since we are going to perform the same action multiple times, I'll write the logic once in a snippet below, then we can re-use it in the main program. The snippet below will take \(A\) and \(B\) as the values in registers <code>RAX</code> and <code>RDX</code>, respectively, then store the result in <code>RAX</code>.</p>
+<pre><code class="language-asm">addl %rdx, %rax
+movl %rax, %rdx
+shrl $32, %rdx
+addl %rdx, %rax
+sarl %rax
 </code></pre>
-<p>As you can see, even though we are only doing two instructions, there are four bytes. This is because the extra bytes (<code>0x00</code> and <code>0xFC</code>) are used to tell the CPU <em>where</em> to jump to. A much more in-depth explication on what those bytes are doing can be found <a href="https://thestarman.pcministry.com/asm/2bytejumps.htm">here</a>.</p>
+<p>Why this doesn't use a <code>div</code> instruction when dividing? I'm not quite sure. My understanding is that byte manipulation with <code>shrl</code> and <code>sarl</code> is simply faster to execute than <code>div</code>.</p>
+<p>Anyways, back to the main goal. We now have a snipped of assembly code that can average the contents of <code>RAX</code> and <code>RDX</code>. To compute the averages of the numbers above, we just need to run it a few times for each set of numbers. Here is the full code:</p>
+<pre><code class="language-asm">main:
+# 1 &amp; 7
+    mov 1, %rax
+    mov 7, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+
+# 2 &amp; 10
+    mov 2, %rax
+    mov 10, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+
+# 5 &amp; 31
+    mov 5, %rax
+    mov 31, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                                                    <a rel="prev" href="3.1_hex_and_binary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="5.2_adder.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-                                                    <a rel="next" href="5_assembly.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
                         <div style="clear: both"></div>
                     </nav>
@@ -192,13 +212,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                                    <a rel="prev" href="3.1_hex_and_binary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="5.2_adder.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-                                    <a rel="next" href="5_assembly.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                             </nav>
 
         </div>

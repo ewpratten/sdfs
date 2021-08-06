@@ -33,6 +33,8 @@
 
         <!-- Custom theme stylesheets -->
         
+                <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
             </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -83,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li><li class="chapter-item expanded "><a href="5.3_averaging.html"><strong aria-hidden="true">5.3.</strong> More Math: Averaging Two numbers</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -258,13 +260,64 @@ main:
 <p>Real quickly, to show how you might use a register in your code, we'll create our second program.</p>
 <p>This program will store the number <code>1</code> in the register <code>RAX</code>, then add <code>3</code> to it, and store that result in <code>RAX</code> again.</p>
 <pre><code class="language-asm">main:
-    mov 1, %rax
-    add 3, %rax
+    movl $1, %rax
+    addl $3, %rax
 </code></pre>
 <p>This is the last time I'll show the generated machine code for some assembly. This program will produce the following machine code when compiled:</p>
 <pre><code>48 8b 04 25 01 00 00 00 48 03 04 25 03 00 00 00
 </code></pre>
 <p>As you can see, this is starting to get very unreasonable to understand. Good thing we switched to assembly, isn't it? 😉</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="more-math-averaging-two-numbers"><a class="header" href="#more-math-averaging-two-numbers">More Math: Averaging Two numbers</a></h1>
+<p>Using our new-found ability to store things in registers, and perform operations on them, let's write a program that finds the average between the following sets of numbers:</p>
+<ul>
+<li><code>1</code> and <code>7</code></li>
+<li><code>2</code> and <code>10</code></li>
+<li><code>5</code> and <code>31</code></li>
+</ul>
+<p>As you should already know, to find the average between numbers \(A\) and \(B\), we compute:</p>
+<p>\[
+\frac{A + B}{2}
+\]</p>
+<p>Since we are going to perform the same action multiple times, I'll write the logic once in a snippet below, then we can re-use it in the main program. The snippet below will take \(A\) and \(B\) as the values in registers <code>RAX</code> and <code>RDX</code>, respectively, then store the result in <code>RAX</code>.</p>
+<pre><code class="language-asm">addl %rdx, %rax
+movl %rax, %rdx
+shrl $32, %rdx
+addl %rdx, %rax
+sarl %rax
+</code></pre>
+<p>Why this doesn't use a <code>div</code> instruction when dividing? I'm not quite sure. My understanding is that byte manipulation with <code>shrl</code> and <code>sarl</code> is simply faster to execute than <code>div</code>.</p>
+<p>Anyways, back to the main goal. We now have a snipped of assembly code that can average the contents of <code>RAX</code> and <code>RDX</code>. To compute the averages of the numbers above, we just need to run it a few times for each set of numbers. Here is the full code:</p>
+<pre><code class="language-asm">main:
+# 1 &amp; 7
+    mov 1, %rax
+    mov 7, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+
+# 2 &amp; 10
+    mov 2, %rax
+    mov 10, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+
+# 5 &amp; 31
+    mov 5, %rax
+    mov 31, %rdx
+
+    add %rdx, %rax
+    mov %rax, %rdx
+    shr $32, %rdx
+    add %rdx, %rax
+    sar %rax
+</code></pre>
 
                     </main>
 
@@ -303,7 +356,9 @@ main:
         
                         <script type="text/javascript">
         window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
         });
         </script>
                 
