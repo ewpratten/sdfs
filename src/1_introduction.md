@@ -10,6 +10,7 @@ I cannot guarantee that everything in this book will be 100% accurate, but I int
 
 Almost every programming tutorial I have ever seen jumps straight in to the high-level code, and leaves out any detail on whats actually going on when you run your programs. The goal of this book is to instead teach you the very basics of how a computer works, then build on top of that. Don't let that scare you though, I try to keep all the "boring" details as interesting as possible, and provide many examples and links to help you understand what you are reading.
 
+**NOTICE: This book is still under development, and is not yet complete.**
 
 ---
 
