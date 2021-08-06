@@ -12,6 +12,7 @@ default-theme = "light"
 git-repository-url = "https://github.com/ewpratten/sdfs"
 cname = "sdfs.retrylife.ca"
 google-analytics = "G-65WL7TRZJ6"
+additional-js = ["js/ga.js"]
 
 [output.html.search]
 enable = true
