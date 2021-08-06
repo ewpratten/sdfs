@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html" class="active"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="1_introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_prerequisites.html"><strong aria-hidden="true">2.</strong> Prerequisites</a></li><li class="chapter-item expanded "><a href="3_memory.html"><strong aria-hidden="true">3.</strong> Computer Memory</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3.1_hex_and_binary.html"><strong aria-hidden="true">3.1.</strong> Hex and Binary</a></li></ol></li><li class="chapter-item expanded "><a href="4_machine_code.html"><strong aria-hidden="true">4.</strong> Machine Code</a></li><li class="chapter-item expanded "><a href="5_assembly.html"><strong aria-hidden="true">5.</strong> Assembly: Machine Code for Humans</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5.1_registers.html" class="active"><strong aria-hidden="true">5.1.</strong> Registers: A Special Type of Memory</a></li><li class="chapter-item expanded "><a href="5.2_adder.html"><strong aria-hidden="true">5.2.</strong> Using a Register: Creating an Adder</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -144,6 +144,34 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="registers-a-special-type-of-memory"><a class="header" href="#registers-a-special-type-of-memory">Registers: A Special Type of Memory</a></h1>
+<p>Back in the <a href="/3_memory.html"><em>Computer Memory</em></a> page, I said I wasn't going to explain how memory is broken up. This page is the first of a few where I'll explain it anyways.</p>
+<p><code>x86_64</code> cpus have a very small handful of very special memory locations called registers. These are physically <em>inside</em> the CPU, making them extremely fast to interact with. Due to this, they are being used all the time, and pretty important to understand.</p>
+<p>Each architecture handles this a little different, but <code>x86_64</code>'s registers can hold <code>64</code> bits of data <em>per register</em> (That's where the <code>_64</code> comes from, regular <code>x86</code> only holds <code>32</code> bits).</p>
+<p>In assembly code, we can directly access these registers using their special names.</p>
+<table><thead><tr><th>Register</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>RAX</code></td><td>General purpose</td></tr>
+<tr><td><code>RBX</code></td><td>General purpose</td></tr>
+<tr><td><code>RCX</code></td><td>General purpose</td></tr>
+<tr><td><code>RDX</code></td><td>General purpose</td></tr>
+<tr><td><code>RSP</code></td><td><a href="">Stack</a> pointer</td></tr>
+<tr><td><code>RBP</code></td><td>Base pointer</td></tr>
+<tr><td><code>RSI</code></td><td>General purpose</td></tr>
+<tr><td><code>RDI</code></td><td>General purpose</td></tr>
+<tr><td><code>R8</code> to <code>R15</code></td><td>General purpose</td></tr>
+</tbody></table>
+<p>As I mentioned earlier, these registers are <code>64</code> bits long, <em>way</em> bigger than we need most of the time. To make things easier for smaller values, Intel assembly lets us specify that we only want to access <em>part</em> of a register, meaning we could store up to three <em>separate</em> values in the same register, while treating it as three separate virtual registers.</p>
+<p>We can use the following tables to determine which mnemonic to use for each virtual register:</p>
+<table><thead><tr><th>Base Register</th><th>32-bit segment</th><th>16-bit segment</th><th>8-bit segment</th></tr></thead><tbody>
+<tr><td><code>RAX</code></td><td><code>EAX</code></td><td><code>AX</code></td><td><code>AL</code></td></tr>
+<tr><td><code>RBX</code></td><td><code>EBX</code></td><td><code>BX</code></td><td><code>BL</code></td></tr>
+<tr><td><code>RCX</code></td><td><code>ECX</code></td><td><code>CX</code></td><td><code>CL</code></td></tr>
+<tr><td><code>RDX</code></td><td><code>EDX</code></td><td><code>DX</code></td><td><code>DL</code></td></tr>
+<tr><td><code>RSP</code></td><td><code>ESP</code></td><td><code>SP</code></td><td><code>SPL</code></td></tr>
+<tr><td><code>RBP</code></td><td><code>EBP</code></td><td><code>BP</code></td><td><code>BPL</code></td></tr>
+<tr><td><code>RSI</code></td><td><code>ESI</code></td><td><code>SI</code></td><td><code>SIL</code></td></tr>
+<tr><td><code>RDI</code></td><td><code>EDI</code></td><td><code>DI</code></td><td><code>DIL</code></td></tr>
+<tr><td><code>R8</code> to <code>R15</code></td><td><code>R8D</code> to <code>R15D</code></td><td><code>R8W</code> to <code>R15W</code></td><td><code>R8B</code> to <code>R15B</code></td></tr>
+</tbody></table>
 
                     </main>
 
@@ -153,6 +181,9 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
+                                                    <a rel="next" href="5.2_adder.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
                         <div style="clear: both"></div>
                     </nav>
@@ -164,6 +195,9 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
+                                    <a rel="next" href="5.2_adder.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                             </nav>
 
         </div>
