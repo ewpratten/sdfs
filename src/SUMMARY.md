@@ -19,7 +19,7 @@
   - [Introduction to System Calls](./8.1_sys_calls.md)
   - [Hello Assembly](./8.2_hello_assembly.md)
   - [Standard Libraries](./8.3_std_lib.md)
-  - [Hello C](./8.3_hello_c.md)
+  - [Hello C](./8.4_hello_c.md)
 - [Data Types](./9_data_types.md)
 - [Interpreted Languages](./10_interpreted_languages.md)
   - [Hello Python](./10.1_hello_python.md)
