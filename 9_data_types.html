@@ -149,6 +149,24 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="data-types"><a class="header" href="#data-types">Data Types</a></h1>
+<p>So far, we have only worked with single bytes (and I briefly mentioned <em>strings</em>). Realistically, not everything can be represented as a number between <code>0</code> and <code>255</code>.</p>
+<p>In real-world programs, we use things called <em>data types</em> to specify how the data we are working with should be interacted with, and laid out in memory.</p>
+<p>Here are the most common types, along with their mnemonics in both C and Rust (we will get to Rust in a bit). Other languages generally use some variation of the names below too.</p>
+<table><thead><tr><th>Type</th><th>C</th><th>Rust</th></tr></thead><tbody>
+<tr><td>Unsigned byte</td><td><code>unsigned char</code></td><td><code>u8</code></td></tr>
+<tr><td>Signed byte</td><td><code>signed char</code></td><td><code>i8</code></td></tr>
+<tr><td>Unsigned short</td><td><code>unsigned short</code></td><td><code>u16</code></td></tr>
+<tr><td>Signed short</td><td><code>signed short</code></td><td><code>i16</code></td></tr>
+<tr><td>Unsigned integer</td><td><code>unsigned int</code></td><td><code>u32</code></td></tr>
+<tr><td>Signed integer</td><td><code>signed int</code></td><td><code>i32</code></td></tr>
+<tr><td>Unsigned long</td><td><code>unsigned long</code></td><td><code>u64</code></td></tr>
+<tr><td>Signed long</td><td><code>signed long</code></td><td><code>i64</code></td></tr>
+<tr><td>32-bit Floating-point number</td><td><code>float</code></td><td><code>f32</code></td></tr>
+<tr><td>64-bit Floating-point number</td><td><code>double</code></td><td><code>f64</code></td></tr>
+<tr><td>A <code>true</code> or <code>false</code> value</td><td><code>bool</code></td><td><code>bool</code></td></tr>
+</tbody></table>
+<p>Another common data type exists, which is called a <em>string</em>. Strings are sequential lists of bytes that represent some text. In C, they are written as the <code>char*</code> type, in Rust they are written as the <code>&amp;str</code> type.</p>
+<p>As you may notice in the table above, almost all data types have a distinction between <em>signed</em> and <em>unsigned</em>. Signed values can be negative, and unsigned values cannot.</p>
 
                     </main>
 
