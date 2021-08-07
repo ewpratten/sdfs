@@ -149,6 +149,21 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="hello-c"><a class="header" href="#hello-c">Hello C</a></h1>
+<p>Back to hello world programs. Now its time to re-implement our hello world program in C. As you'll notice in a second, this program is a lot smaller because we are going to use the C <a href="/8.3_std_lib.html"><em>Standard Library</em></a> instead of making System Calls directly.</p>
+<p>In C, we can import code from the standard library. This is done by including something called the <em>header file</em> in our program. In this case, we need to include the header that defines functions for printing to the screen. This can be done by adding the following line to the top of our code:</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+</code></pre>
+<p>Now, just like our <a href="/7.1_reimplementing_averaging.html">averaging program</a>, we define a <code>main</code> function, and execute our code.</p>
+<pre><code class="language-c">int main() {
+    puts(&quot;Hello, World!&quot;);
+    return 0;
+}
+</code></pre>
+<p>Just like the averaging program, when we compile this to assembly, you can see that the compiler implemented the program slightly different than I did in the <a href="/8.2_hello_assembly.html"><em>Hello Assembly</em></a> example. Functionally, it is still the same code, just using the C Standard Library instead of making system calls.</p>
+<iframe width="100%" height="400px" src="https://godbolt.org/e?hideEditorToolbars=true#g:!((g:!((g:!((h:codeEditor,i:(fontScale:14,fontUsePx:'0',j:1,lang:___c,selection:(endColumn:19,endLineNumber:1,positionColumn:19,positionLineNumber:1,selectionStartColumn:19,selectionStartLineNumber:1,startColumn:19,startLineNumber:1),source:'%23include+%3Cstdio.h%3E%0A%0Aint+main()+%7B%0A++++puts(%22Hello,+World!!%22)%3B%0A++++return+0%3B%0A%7D'),l:'5',n:'0',o:'C+source+%231',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:cg112,filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'1',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:___c,libs:!(),options:'',selection:(endColumn:12,endLineNumber:10,positionColumn:12,positionLineNumber:10,selectionStartColumn:12,selectionStartLineNumber:10,startColumn:12,startLineNumber:10),source:1),l:'5',n:'0',o:'x86-64+gcc+11.2+(Editor+%231,+Compiler+%231)+C',t:'0')),k:50,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4"></iframe>
+<p>You can compile and run this on your own computer by putting the program in a file called <code>hello.c</code>, and running the following command in your terminal to execute it:</p>
+<pre><code class="language-sh">gcc hello.c &amp;&amp; ./a.out
+</code></pre>
 
                     </main>
 
