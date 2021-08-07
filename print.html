@@ -232,6 +232,7 @@ main:
 </code></pre>
 <p><code>loop</code> and <code>main</code> are labels, and the <code>jmp</code> instructions should be pretty self-explanatory at this point.</p>
 <p>It is important to note that, all of the assembly code to follow in this book <em>is valid</em>, but will not run without some special tools, since I am completely ignoring platform-specific details in the code. The assembly is just to give an easy way for me to show you how programs are working at this low level.</p>
+<p><em>And yes, I am mixing intel and gnu syntax all over the place. That will be fixed eventually</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="registers-a-special-type-of-memory"><a class="header" href="#registers-a-special-type-of-memory">Registers: A Special Type of Memory</a></h1>
 <p>Back in the <a href="/3_memory.html"><em>Computer Memory</em></a> page, I said I wasn't going to explain how memory is broken up. This page is the first of a few where I'll explain it anyways.</p>
 <p><code>x86_64</code> cpus have a very small handful of very special memory locations called registers. These are physically <em>inside</em> the CPU, making them extremely fast to interact with. Due to this, they are being used all the time, and pretty important to understand.</p>
@@ -474,8 +475,78 @@ mov %rsp, %rbp
 <div style="break-before: page; page-break-before: always;"></div><h1 id="introduction-to-system-calls"><a class="header" href="#introduction-to-system-calls">Introduction to System Calls</a></h1>
 <p>There are some things way out of scope for this book (at least for now). Printing text to the screen from assembly code is one of those things.</p>
 <p>Luckily, the world has a never-ending supply of smart people who build things to make programming easier.</p>
-<p>Programs running on a Linux system have access to the <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">Linux System Call Interface</a>.</p>
+<p>Programs running on a Linux system have access to the <a href="http://faculty.nps.edu/cseagle/assembly/sys_call.html">Linux System Call Interface</a>. Every syscall has a <em>System Call Number</em> associated with it that we can use to specify which syscall we want to use.</p>
+<p>Jumping back to assembly for a moment, to make a syscall, we must:</p>
+<ol>
+<li>Store the syscall number in register <code>RAX</code></li>
+<li>Do any extra work specified for that specific syscall 
+<ul>
+<li>This could include telling the syscall how much data we have, and passing some extra arguments</li>
+</ul>
+</li>
+<li>Call the Kernel by using the <code>int 0x80</code> instruction</li>
+</ol>
+<p>For a quick example. Let's say we want a program that just calls the <code>exit</code> syscall, we could write:</p>
+<pre><code class="language-x86asm">main:
+    mov $1, %rax
+    int 0x80
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-assembly"><a class="header" href="#hello-assembly">Hello Assembly</a></h1>
+<p>At this point in the book, I have talked about the following:</p>
+<ul>
+<li>Memory</li>
+<li>How the CPU executes machine code</li>
+<li>How assembly translates to machine code</li>
+<li>What registers are and how to use them</li>
+<li>System calls</li>
+</ul>
+<p>Now that we are going to write a proper hello world program, we need to use all of these together.</p>
+<p>Firstly, a small tweak needs to made to how we have been structuring assembly code so far. Up until this point, all assembly code in the book has been written for some imaginary computer that can only load one program into memory, stores that program at address <code>0x00</code> and executes the first byte.</p>
+<p>Now, our code needs to be written so that it can be run just like any other program on your computer. This really only means one thing, Instead of starting our assembly code like this:</p>
+<pre><code class="language-x86asm">main:
+</code></pre>
+<p>It must be started like this:</p>
+<pre><code class="language-x86asm">.global _start
+.text
+    _start:
+</code></pre>
+<p>You can think of those few extra lines as a bit of metadata, telling the operating system <em>where</em> to find the first instruction of your program.</p>
+<p>Alright, enough preface, time to write some code! I'll start by outlining exactly what needs to happen in order to print <code>Hello, World!</code> to the screen.</p>
+<ol>
+<li>The program starts</li>
+<li>We store the letters <code>Hello, World!</code> somewhere in memory, in order. (this is called a string)</li>
+<li>We configure the registers <code>%rax</code> and <code>%rdi</code> to specify we want to call the <code>write</code> system call</li>
+<li>We save the memory address of the first character of our string to the register <code>%rsi</code> so the syscall knows what we want to print</li>
+<li>We save the length of the string to the register <code>%rdx</code> so the syscall knows how many characters to print</li>
+<li>We call the <code>write</code> syscall</li>
+<li>We exit the program</li>
+</ol>
+<p>Here is what the whole program looks like:</p>
+<pre><code class="language-x86asm"># The new program header we need
+.global _start
+.text
+
+    # Where the program starts
+    _start:
+        mov $1, %rax       # Specify we want system call 1 (the write call)
+        mov $1, %rdi       # Specify we want to write to the terminal
+        mov $message, %rsi # Tell the system call where our string is in memory
+        mov $14, %rdx      # Tell the system call how big the string is
+        syscall            # Call the system call
+
+        # Our exit code
+        mov $60, %rax      # Specify we want system call 60 (the exit call)
+        xor %rdi, %rdi     # Set rdi to 0 (this means the program was successful)
+        syscall            # Call the system call
+
+    # The string containing our message
+    message:
+        .ascii &quot;Hello, World!\n&quot; # The \n at the end of this makes it print on its own line
+
+</code></pre>
+<p>Reminder: This is an actual valid program! Save it to a file called <code>hello.s</code>, then run the following in your terminal to execute it:</p>
+<pre><code class="language-sh">gcc -nostdlib -no-pie hello.s &amp;&amp; ./a.out
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="standard-libraries"><a class="header" href="#standard-libraries">Standard Libraries</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-c"><a class="header" href="#hello-c">Hello C</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data-types"><a class="header" href="#data-types">Data Types</a></h1>

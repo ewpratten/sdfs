@@ -151,7 +151,22 @@
                         <h1 id="introduction-to-system-calls"><a class="header" href="#introduction-to-system-calls">Introduction to System Calls</a></h1>
 <p>There are some things way out of scope for this book (at least for now). Printing text to the screen from assembly code is one of those things.</p>
 <p>Luckily, the world has a never-ending supply of smart people who build things to make programming easier.</p>
-<p>Programs running on a Linux system have access to the <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">Linux System Call Interface</a>.</p>
+<p>Programs running on a Linux system have access to the <a href="http://faculty.nps.edu/cseagle/assembly/sys_call.html">Linux System Call Interface</a>. Every syscall has a <em>System Call Number</em> associated with it that we can use to specify which syscall we want to use.</p>
+<p>Jumping back to assembly for a moment, to make a syscall, we must:</p>
+<ol>
+<li>Store the syscall number in register <code>RAX</code></li>
+<li>Do any extra work specified for that specific syscall 
+<ul>
+<li>This could include telling the syscall how much data we have, and passing some extra arguments</li>
+</ul>
+</li>
+<li>Call the Kernel by using the <code>int 0x80</code> instruction</li>
+</ol>
+<p>For a quick example. Let's say we want a program that just calls the <code>exit</code> syscall, we could write:</p>
+<pre><code class="language-x86asm">main:
+    mov $1, %rax
+    int 0x80
+</code></pre>
 
                     </main>
 
